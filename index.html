@@ -1,305 +1,216 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Birthday Puzzle Challenge</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Hunt Puzzle</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f8f9fa;
-}
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
 
-.container {
-    width: 90%;  /* Increased width for better readability */
-    max-width: 600px;  /* Limit width for larger screens */
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
 
-/* Ensure poems and clues are readable */
-.poem, .clue {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    margin-bottom: 15px;
-    white-space: pre-wrap;  /* Keeps line breaks */
-}
+        .poem, .clue {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
 
-/* Adjust input field */
-input[type="text"] {
-    width: 80%; /* Takes most of the width on mobile */
-    padding: 10px;
-    font-size: 1.2rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: center;
-}
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
 
-/* Ensure buttons are aligned properly */
-.buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
-}
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
 
-button {
-    padding: 10px 15px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    background: #007bff;
-    color: white;
-    cursor: pointer;
-}
+        button {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
 
-button:disabled {
-    background: gray;
-    cursor: not-allowed;
-}
+        button:disabled {
+            background: gray;
+            cursor: not-allowed;
+        }
 
-/* Adjust layout for smaller screens */
-@media (max-width: 480px) {
-    .container {
-        width: 95%;
-        padding: 15px;
-    }
+        #clueText {
+            display: none;
+            font-size: 1rem;
+            color: #d9534f;
+            margin-top: 10px;
+            word-wrap: break-word;
+        }
 
-    .poem, .clue {
-        font-size: 1rem; /* Slightly smaller text for mobile */
-    }
+        #finalResults {
+            display: none;
+            margin-top: 20px;
+        }
 
-    input[type="text"] {
-        width: 90%;
-        font-size: 1rem;
-    }
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
 
-    .buttons {
-        flex-direction: column;
-        gap: 5px;
-    }
+            .poem, .clue {
+                font-size: 1rem;
+            }
 
-    button {
-        font-size: 0.9rem;
-        padding: 8px;
-    }
-}
+            input[type="text"] {
+                width: 90%;
+                font-size: 1rem;
+            }
 
+            .buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            button {
+                font-size: 0.9rem;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <pre id="poem"></pre>
-        <input type="text" id="answer" placeholder="Enter book name">
-        <div class="button-container">
-            <button id="submitButton" onclick="checkAnswer()">Submit</button>
-            <button id="clueButton" onclick="showClue()">Clue</button>
-            <button id="revealAnswerButton" onclick="revealAnswer()">Reveal Answer</button>
-            <button id="nextButton" onclick="nextPoem()">Next Puzzle</button>
-        </div>
-        <p id="message"></p>
-        <p id="clue"></p>
-    </div>
 
-    <div id="summary" class="container">
-        <h3>Summary of Your Puzzle Attempts</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Poem</th>
-                    <th>Clue</th>
-                    <th>Answer</th>
-                    <th>Attempts</th>
-                    <th>Clue Used</th>
-                    <th>Reveal Answer Used</th>
-                </tr>
-            </thead>
-            <tbody id="summaryList"></tbody>
-        </table>
+    <div class="container">
+        <h2>Puzzle <span id="puzzleNumber">1</span></h2>
+        <p class="poem" id="poem"></p>
+        <input type="text" id="answerInput" placeholder="Enter your answer">
+        <p id="clueText"></p>
+        <div class="buttons">
+            <button id="submitBtn" onclick="checkAnswer()">Submit</button>
+            <button id="clueBtn" onclick="showClue()">Clue</button>
+            <button id="revealBtn" onclick="revealAnswer()" style="display: none;">Reveal Answer</button>
+            <button id="nextBtn" onclick="nextPuzzle()" style="display: none;">Next Puzzle</button>
+        </div>
+        <div id="finalResults"></div>
     </div>
 
     <script>
-		const puzzles = [
-			{
-				poem: "Five young sleuths on daring quests,<br />Solving crimes, outshining the rest.<br />From secret caves to smugglers’ cove,<br />Adventures spark as they rove.",
-				answer: "Famous Five",
-				clue: "A clever dog joins them <br />in every fight, solving mysteries <br />with courage and might."
-			},
-			{
-				poem: "Darkness looms, the fold divides,<br />Magic sparks where hope resides.<br />Light and shadow clash and bend,<br />A rising power must defend.",
-				answer: "Shadow and Bone",
-				clue: "A stag with glowing horns <br />holds a fate untold, in <br />legends of powers old."
-			},
-			{
-				poem: "A fight for life, a game unfair,<br />Arrows fly through desperate air.<br />A spark ignites, the fire grows,<br />A nation rises, fury shows.",
-				answer: "Hunger Games",
-				clue: "A mockingbird pin shines bright <br />as rebels rise and start the <br />fight."
-			},
-			{
-				poem: "Worlds collide, the fate unknown,<br />Dust and secrets overthrown.<br />A golden tool, a path to find,<br />The war of will, the test of mind.",
-				answer: "His Dark Materials",
-				clue: "A compass filled with golden sand <br />guides the way, to a far-off <br />land."
-			},
-			{
-				poem: "Shadows lurk, the runes shine bright,<br />A secret war fought in the night.<br />Love and loss, a fate untold,<br />Blood and blade, the legends old.",
-				answer: "The Dark Artifices",
-				clue: "A lost book holds hidden spells, <br />changing fate, where magic dwells."
-			},
-			{
-				poem: "A genius mind, a cunning plan,<br />A fairy world, a race outran.<br />Technology, a stolen prize,<br />A master thief with watchful eyes.",
-				answer: "Artemis Fowl",
-				clue: "A fairy cop with strength untold, <br />stands against a scheme so bold."
-			},
-			{
-				poem: "Angels, demons, blades of steel,<br />Ancient secrets they conceal.<br />A hidden war in silent streets,<br />A hero lost, a fate repeats.",
-				answer: "Mortal Instruments",
-				clue: "A stele marks the chosen path <br />where warriors fight the demon <br />wrath."
-			},
-			{
-				poem: "Twin secrets, a school so grand,<br />A hidden tale, a mystery planned.<br />One deceives, one seeks the truth,<br />Darkened halls hide silent proof.",
-				answer: "Scarlet and Ivy",
-				clue: "A girl is missing, a twin's <br />disguise, uncovering secrets and <br />hidden lies."
-			},
-			{
-				poem: "A hunter bold, a jungle wild,<br />Clever tricks, a heart so mild.<br />No beast too strong, no trap too deep,<br />He treads with luck, and none can leap.",
-				answer: "Shikari Shambu",
-				clue: "A fearless man who trips and falls, <br />yet somehow bravely dodges it all."
-			},
-			{
-				poem: "A game of wits, a fortune vast,<br />Riddles, puzzles, secrets past.<br />A contest fierce, a family fight,<br />Who will win the final right?",
-				answer: "The Inheritance Games",
-				clue: "A rich man's puzzle sets the stage, <br />for secrets hidden page by page."
-			},
-			{
-				poem: "A god reborn, a journey grand,<br />The fate of men within his hand.<br />Legends rise, the truth untold,<br />A battle fought in stories old.",
-				answer: "Shiva Trilogy",
-				clue: "A blue-throated man leads the fight <br />between the forces of dark and <br />light."
-			},
-			{
-				poem: "A gifted mind, a world unknown,<br />Secrets lost, a power grown.<br />A hidden city, paths untraced,<br />A destiny none can replace.",
-				answer: "Keeper of the Lost Cities",
-				clue: "A telepath girl, a truth unseen, <br />bound by magic and fate between."
-			},
-			{
-				poem: "A wand, a spell, a scar so deep,<br />A battle fought while others sleep.<br />A school of magic, fate unwinds,<br />Darkness falls, but hope still shines.",
-				answer: "Harry Potter",
-				clue: "A lightning mark, a hidden door, <br />a world of spells and myths <br />galore."
-			},
-			{
-				poem: "A school, a club, a mystery bright,<br />Two young girls, a case to fight.<br />A trail of clues, a secret key,<br />Solving crimes with bravery.",
-				answer: "Murder Most Unladylike",
-				clue: "A murder at school, a clue so <br />small, will lead detectives to solve <br />it all."
-			},
-			{
-				poem: "A sleuth so bold, a case so tough,<br />Finding truth when times are rough.<br />A missing clue, a trail so thin,<br />The hunt begins, will she win?",
-				answer: "Nancy Drew",
-				clue: "A girl detective, smart and wise, <br />uncovering secrets in disguise."
-			},
-			{
-				poem: "A boy, a town, a life so free,<br />Adventures wild, by the banyan tree.<br />Friends and mischief, laughter bright,<br />Childhood tales of pure delight.",
-				answer: "Swami and Friends",
-				clue: "A young boy runs through village <br />ways, finding joy in simple <br />days."
-			}
-		];
+        const puzzles = [
+            {
+                poem: "Five young sleuths, adventure unfolds,<br />Hidden treasures, secrets untold.<br />Coastal islands, smugglers in sight,<br />Solving mysteries, making things right.",
+                answer: ["famous five", "the famous five"],
+                clue: "A dog named Timmy<br />leads the way to truth."
+            },
+            {
+                poem: "A world divided, darkness grows,<br />A soldier rises, power flows.<br />Light and shadow, battle untold,<br />A stag's gift, a fate foretold.",
+                answer: ["shadow and bone"],
+                clue: "A Grisha girl discovers<br />her hidden sunlit power."
+            },
+            {
+                poem: "A fight to live, a brutal game,<br />The odds are low, the risks the same.<br />One girl defies, a world in sight,<br />A mockingbird takes its flight.",
+                answer: ["hunger games", "the hunger games"],
+                clue: "The Capitol's deadly game<br />leaves only one standing."
+            }
+        ];
 
-
-
-        let index = 0;
+        let currentPuzzle = 0;
         let attempts = 0;
-        let puzzleResults = [];
         let clueUsed = false;
+        let revealUsed = false;
+        let results = [];
 
-        function loadPoem() {
-            document.getElementById("poem").innerHTML = puzzles[index].poem;
-            document.getElementById("message").innerText = "";
-            document.getElementById("answer").value = "";
-            document.getElementById("nextButton").style.display = "none";
-            document.getElementById("revealAnswerButton").style.display = "none";
-            document.getElementById("clueButton").style.display = "inline-block";
-            document.getElementById("submitButton").style.display = "inline-block";
-            document.getElementById("clue").style.display = "none";
-            clueUsed = false;
+        function displayPuzzle() {
+            document.getElementById("poem").innerHTML = puzzles[currentPuzzle].poem;
+            document.getElementById("puzzleNumber").textContent = currentPuzzle + 1;
+            document.getElementById("clueText").style.display = "none";
+            document.getElementById("answerInput").value = "";
+            document.getElementById("answerInput").style.display = "block";
+            document.getElementById("submitBtn").style.display = "inline-block";
+            document.getElementById("clueBtn").style.display = "inline-block";
+            document.getElementById("revealBtn").style.display = "none";
+            document.getElementById("nextBtn").style.display = "none";
             attempts = 0;
-        }
-
-        function normalizeAnswer(answer) {
-            return answer.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+            clueUsed = false;
+            revealUsed = false;
         }
 
         function checkAnswer() {
-            let userAnswer = normalizeAnswer(document.getElementById("answer").value);
-            let correctAnswer = normalizeAnswer(puzzles[index].answer);
-            if (userAnswer === correctAnswer) {
-                document.getElementById("message").innerText = "🎉 Correct! Well done! Collect a gift!";
-                document.getElementById("submitButton").style.display = "none";
-                document.getElementById("nextButton").style.display = "inline-block";
-                document.getElementById("clueButton").style.display = "none";
-                document.getElementById("revealAnswerButton").style.display = "none";
-                puzzleResults.push({ poem: puzzles[index].poem, clue: puzzles[index].clue, answer: puzzles[index].answer, attempts: attempts, clueUsed: clueUsed, answerRevealed: false });
+            let userAnswer = document.getElementById("answerInput").value.toLowerCase().trim();
+            if (puzzles[currentPuzzle].answer.includes(userAnswer)) {
+                results.push({ ...puzzles[currentPuzzle], attempts, clueUsed, revealUsed });
+                document.getElementById("submitBtn").style.display = "none";
+                document.getElementById("clueBtn").style.display = "none";
+                document.getElementById("nextBtn").style.display = "inline-block";
             } else {
                 attempts++;
-                document.getElementById("message").innerText = "❌ Try again!";
                 if (attempts >= 10) {
-                    document.getElementById("revealAnswerButton").style.display = "inline-block";
-                    document.getElementById("nextButton").style.display = "none";
+                    document.getElementById("revealBtn").style.display = "inline-block";
                 }
             }
         }
 
-        function nextPoem() {
-            index++;
-            if (index < puzzles.length) {
-                loadPoem();
-            } else {
-                document.getElementById("poem").innerText = "🎂 Congratulations! You've solved all puzzles! Happy Birthday! 🎂";
-                document.getElementById("answer").style.display = "none";
-                document.getElementById("nextButton").style.display = "none";
-                document.getElementById("clueButton").style.display = "none";
-                document.getElementById("revealAnswerButton").style.display = "none";
-                showSummary();
-            }
-        }
-
         function showClue() {
-            document.getElementById("clue").innerHTML = puzzles[index].clue;
-            document.getElementById("clue").style.display = "block";
+            document.getElementById("clueText").innerHTML = puzzles[currentPuzzle].clue;
+            document.getElementById("clueText").style.display = "block";
             clueUsed = true;
         }
 
         function revealAnswer() {
-            document.getElementById("message").innerText = "The correct answer is: " + puzzles[index].answer;
-            puzzleResults.push({ poem: puzzles[index].poem, clue: puzzles[index].clue, answer: puzzles[index].answer, attempts: attempts, clueUsed: clueUsed, answerRevealed: true });
+            document.getElementById("answerInput").value = puzzles[currentPuzzle].answer[0];
+            document.getElementById("revealBtn").style.display = "none";
+            revealUsed = true;
         }
 
-        function showSummary() {
-            let summaryList = document.getElementById("summaryList");
-            puzzles.forEach((puzzle, i) => {
-                let tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>${puzzle.poem}</td>
-                    <td>${puzzle.clue}</td>
-                    <td>${puzzle.answer}</td>
-                    <td>${puzzleResults[i].attempts}</td>
-                    <td>${puzzleResults[i].clueUsed}</td>
-                    <td>${puzzleResults[i].answerRevealed}</td>
-                `;
-                summaryList.appendChild(tr);
+        function nextPuzzle() {
+            currentPuzzle++;
+            if (currentPuzzle < puzzles.length) {
+                displayPuzzle();
+            } else {
+                showFinalResults();
+            }
+        }
+
+        function showFinalResults() {
+            let resultHTML = "<h2>Final Results</h2><table border='1'><tr><th>Poem</th><th>Answer</th><th>Attempts</th><th>Clue Used</th><th>Revealed</th></tr>";
+            results.forEach(r => {
+                resultHTML += `<tr><td>${r.poem}</td><td>${r.answer[0]}</td><td>${r.attempts}</td><td>${r.clueUsed}</td><td>${r.revealUsed}</td></tr>`;
             });
-            document.getElementById("summary").style.display = "block";
+            resultHTML += "</table>";
+            document.querySelector(".container").innerHTML = resultHTML;
         }
 
-        loadPoem();
+        displayPuzzle();
     </script>
+
 </body>
 </html>
